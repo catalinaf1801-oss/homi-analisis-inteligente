@@ -1,0 +1,645 @@
+<!DOCTYPE html>
+<html lang="es">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>HOMI | Asistente Inteligente de Inventario</title>
+<script src="https://cdn.jsdelivr.net/npm/xlsx@0.18.5/dist/xlsx.full.min.js"></script>
+<style>
+:root{
+  --azul:#172b73; --azul2:#243b8f; --fondo:#f4f6fa; --borde:#d8deea;
+  --texto:#172033; --gris:#667085; --verde:#0b7d68; --rojo:#b42318;
+}
+*{box-sizing:border-box}
+body{margin:0;font-family:"Segoe UI",Arial,sans-serif;background:var(--fondo);color:var(--texto)}
+header{
+  height:92px;
+  background:#172b73;
+  color:#fff;
+  display:flex;
+  align-items:stretch;
+  width:100%;
+  box-shadow:0 3px 12px rgba(0,0,0,.12);
+}
+.header-logo{
+  width:190px;
+  min-width:190px;
+  background:#06255b;
+  display:flex;
+  align-items:center;
+  justify-content:center;
+  overflow:hidden;
+}
+.header-logo img{
+  width:188px;
+  height:92px;
+  object-fit:cover;
+  object-position:center;
+}
+.header-title{
+  flex:1;
+  background:#24358f;
+  display:flex;
+  flex-direction:column;
+  justify-content:center;
+  padding:0 28px;
+}
+.header-title h1{
+  margin:0;
+  color:#fff;
+  font-size:23px;
+  line-height:1.15;
+  font-weight:800;
+  letter-spacing:.1px;
+}
+.header-title .sub{
+  margin-top:5px;
+  color:#fff;
+  font-size:13px;
+  font-weight:600;
+  font-style:italic;
+  opacity:1;
+}
+main{max-width:1180px;margin:22px auto;padding:0 18px}
+.card{background:#fff;border-radius:18px;padding:22px;margin-bottom:18px;box-shadow:0 8px 28px rgba(0,0,0,.08)}
+h1,h2{color:var(--azul);margin-top:0}
+p{color:var(--gris)}
+.row{display:flex;gap:10px;flex-wrap:wrap;align-items:center}
+input[type=file],input[type=password],input[type=text]{padding:12px;border:1px solid var(--borde);border-radius:10px;background:#fff}
+input[type=file]{flex:1;min-width:280px}
+button{border:0;border-radius:10px;padding:11px 16px;background:var(--azul);color:#fff;font-weight:600;cursor:pointer}
+button:hover{opacity:.92}
+button.alt{background:#edf1ff;color:var(--azul);border:1px solid #d5dcf3}
+.status{margin-top:12px;padding:12px;border-radius:10px;background:#f2f4f7;font-size:14px}
+.status.ok{background:#ecfdf3;color:#067647}.status.err{background:#fef3f2;color:#b42318}
+.questions{display:flex;flex-wrap:wrap;gap:9px;margin:14px 0}
+.q{background:#fff;color:var(--azul);border:1px solid #cfd7e8;border-radius:20px;padding:9px 13px;font-size:13px}
+.chat{height:470px;overflow-y:auto;background:#f7f8fb;border-radius:12px;padding:18px}
+.msg{max-width:84%;padding:13px 15px;border-radius:14px;margin:9px 0;line-height:1.5}
+.user{margin-left:auto;background:#e9edff}.bot{background:#fff;border:1px solid #e4e7ec}
+.entry{display:flex;gap:10px;margin-top:14px}
+.entry input{flex:1}
+.small{font-size:12px;color:#7a8394}
+.grid{display:grid;grid-template-columns:repeat(3,1fr);gap:12px;margin-top:14px}
+.stat{background:#f7f8fb;border:1px solid #e7eaf0;border-radius:12px;padding:15px}
+.stat b{display:block;font-size:23px;color:var(--azul)}
+table{border-collapse:collapse;width:100%;margin-top:12px;font-size:13px;background:#fff}
+th,td{border:1px solid #e3e7ee;padding:9px 10px;text-align:left;vertical-align:top}
+th{background:#f3f5f8;color:#172b73;font-weight:700}
+tr:nth-child(even){background:#fafbfc}
+@media(max-width:800px){.grid{grid-template-columns:1fr}.entry{flex-direction:column}.header-title h1{font-size:17px}.header-logo{width:120px;min-width:120px}.header-logo img{width:120px;height:92px}.header-title{padding:0 14px}}
+</style>
+</head>
+<body>
+<header>
+  <div class="header-logo">
+    <img src="data:image/png;base64,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" alt="HOMI - Hospital de la Misericordia">
+  </div>
+  <div class="header-title">
+    <h1>DASHBOARD DE MANTENIMIENTO ING. BIOMÉDICA</h1>
+    <div class="sub">Área de Hospitalización</div>
+  </div>
+</header>
+
+<main>
+<section class="card" style="border-top:4px solid #24358f;">
+  <h1>🤖 Análisis Inteligente</h1>
+  <p>
+    El asistente usa Gemini para interpretar la pregunta y funciones de consulta para obtener
+    resultados directamente del inventario cargado. Las preguntas del sistema están organizadas por Mantenimiento, Calibración e Inventario. En las consultas que generan listas se muestran únicamente Equipo, Ubicación y Placa. La IA no inventa cantidades: los resultados se calculan sobre los datos.
+  </p>
+
+  <div class="row">
+    <input id="archivo" type="file" accept=".xlsx,.xls">
+    <button onclick="cargarInventario()">Cargar inventario</button>
+  </div>
+
+  <div id="estado" class="status">Esperando BD_EQUIPOS_HOMI.xlsx...</div>
+
+  <div class="grid">
+    <div class="stat"><b id="statEquipos">—</b>Equipos registrados</div>
+    <div class="stat"><b id="statTipos">—</b>Tipos de equipo</div>
+    <div class="stat"><b id="statColumnas">—</b>Columnas</div>
+  </div>
+</section>
+
+<section class="card">
+  <h2>Preguntas principales</h2>
+
+  <h3 style="color:#172b73;">🔧 Mantenimiento</h3>
+  <div class="questions">
+    <button class="q" onclick="preguntarRapido('¿Qué equipos tienen mantenimiento vencido?')">¿Qué equipos tienen mantenimiento vencido?</button>
+    <button class="q" onclick="preguntarRapido('¿Qué equipos vencen hoy?')">¿Qué equipos vencen hoy?</button>
+  </div>
+  <div class="small" style="margin-top:-4px;margin-bottom:16px;">Más preguntas de mantenimiento están disponibles escribiéndolas en el chat.</div>
+
+  <h3 style="color:#172b73;">🧪 Calibración</h3>
+  <div class="questions">
+    <button class="q" onclick="preguntarRapido('¿Qué equipos tienen calibración vencida?')">¿Qué equipos tienen calibración vencida?</button>
+    <button class="q" onclick="preguntarRapido('¿Qué equipos deben calibrarse esta semana?')">¿Qué equipos deben calibrarse esta semana?</button>
+  </div>
+  <div class="small" style="margin-top:-4px;margin-bottom:16px;">Más preguntas de calibración están disponibles escribiéndolas en el chat.</div>
+
+  <h3 style="color:#172b73;">📦 Inventario</h3>
+  <div class="questions">
+    <button class="q" onclick="preguntarRapido('¿Cuántos equipos hay?')">¿Cuántos equipos hay?</button>
+    <button class="q" onclick="preguntarRapido('¿Cuántos tipos de equipos hay?')">¿Cuántos tipos de equipos hay?</button>
+  </div>
+  <div class="small" style="margin-top:-4px;">La consulta ¿Cuántos monitores tenemos? también está programada y se puede escribir en el chat.</div>
+</section>
+
+<section class="card">
+  <h2>💬 Chat</h2>
+  <div id="chat" class="chat">
+    <div class="msg bot"><b>Asistente:</b> Carga el inventario y escribe una pregunta.</div>
+  </div>
+
+  <div class="entry">
+    <input id="pregunta" type="text" placeholder="Ej.: ¿Cuántos monitores hay en P4 308?" onkeydown="if(event.key==='Enter') preguntar()">
+    <button onclick="preguntar()">Preguntar</button>
+  </div>
+
+  <p class="small">
+    La conexión con Gemini se realiza mediante un backend seguro. La API Key no está almacenada en esta página.
+  </p>
+</section>
+</main>
+
+<script>
+// ============================================================
+// CONFIGURACIÓN
+// ============================================================
+let inventario = [];
+let columnas = [];
+const GEMINI_BACKEND_URL = "https://TU-BACKEND-AQUI.example.com/gemini";
+const GEMINI_MODEL = "gemini-3.6-flash";
+
+// ============================================================
+// UTILIDADES
+// ============================================================
+function norm(value){
+  return String(value ?? "")
+    .normalize("NFD")
+    .replace(/[\u0300-\u036f]/g,"")
+    .toLowerCase()
+    .trim();
+}
+
+function buscarColumna(fragmentos){
+  const fs = fragmentos.map(norm);
+  return columnas.find(c => {
+    const nc = norm(c);
+    return fs.every(f => nc.includes(f));
+  }) || null;
+}
+
+function fechaSolo(v){
+  if(v instanceof Date && !isNaN(v)) return new Date(v.getFullYear(),v.getMonth(),v.getDate());
+  if(typeof v === "number"){
+    const d = XLSX.SSF.parse_date_code(v);
+    if(d) return new Date(d.y,d.m-1,d.d);
+  }
+  const s = String(v ?? "").trim();
+  if(!s) return null;
+  const iso = s.match(/^(\d{4})[-/](\d{1,2})[-/](\d{1,2})/);
+  if(iso) return new Date(+iso[1],+iso[2]-1,+iso[3]);
+  const lat = s.match(/^(\d{1,2})[/-](\d{1,2})[/-](\d{4})/);
+  if(lat) return new Date(+lat[3],+lat[2]-1,+lat[1]);
+  const d = new Date(s);
+  return isNaN(d) ? null : new Date(d.getFullYear(),d.getMonth(),d.getDate());
+}
+
+function diasDesdeHoy(data){
+  const d = fechaSolo(data);
+  if(!d) return null;
+  const hoy = new Date();
+  const h = new Date(hoy.getFullYear(),hoy.getMonth(),hoy.getDate());
+  return Math.round((d-h)/86400000);
+}
+
+function fmtFecha(v){
+  const d = fechaSolo(v);
+  return d ? d.toLocaleDateString("es-CO") : "";
+}
+
+function esc(s){
+  const d=document.createElement("div");
+  d.textContent=String(s);
+  return d.innerHTML;
+}
+
+function formatear(texto){
+  return esc(texto)
+    .replace(/\\*\\*(.*?)\\*\\*/g,"<b>$1</b>")
+    .replace(/\\n/g,"<br>");
+}
+
+function agregarMensaje(html,tipo){
+  const chat=document.getElementById("chat");
+  const d=document.createElement("div");
+  d.className="msg "+tipo;
+  d.innerHTML=html;
+  chat.appendChild(d);
+  chat.scrollTop=chat.scrollHeight;
+  return d;
+}
+
+function tablaHTML(rows, cols){
+  if(!rows.length) return "<p>No hay registros.</p>";
+  let html="<table><thead><tr>";
+  cols.forEach(c=>html+="<th>"+esc(c)+"</th>");
+  html+="</tr></thead><tbody>";
+  rows.forEach(r=>{
+    html+="<tr>";
+    cols.forEach(c=>html+="<td>"+esc(r[c] ?? "")+"</td>");
+    html+="</tr>";
+  });
+  html+="</tbody></table>";
+  return html;
+}
+
+function renderInventoryTable(rows){
+  if(!rows || !rows.length){
+    return "<p>No se encontraron registros.</p>";
+  }
+
+  const cEquipo = buscarColumna(["equipo"]);
+  const cUb = buscarColumna(["ubicacion"]);
+  const cPlaca = buscarColumna(["placa"]);
+
+  let out = '<div style="overflow:auto"><table>';
+  out += '<thead><tr><th>Equipo</th><th>Ubicación</th><th>Placa</th></tr></thead><tbody>';
+
+  rows.forEach(function(r){
+    out += '<tr>' +
+      '<td>' + esc(r[cEquipo] ?? "") + '</td>' +
+      '<td>' + esc(r[cUb] ?? "") + '</td>' +
+      '<td>' + esc(r[cPlaca] ?? "") + '</td>' +
+      '</tr>';
+  });
+
+  out += '</tbody></table></div>';
+  return out;
+}
+
+// ============================================================
+// CARGA EXCEL
+// ============================================================
+function cargarInventario(){
+  const f=document.getElementById("archivo").files[0];
+  const estado=document.getElementById("estado");
+  if(!f){
+    estado.className="status err";
+    estado.textContent="Selecciona BD_EQUIPOS_HOMI.xlsx.";
+    return;
+  }
+  const reader=new FileReader();
+  reader.onload=e=>{
+    try{
+      const wb=XLSX.read(new Uint8Array(e.target.result),{type:"array"});
+      const sheet=wb.Sheets[wb.SheetNames[0]];
+      inventario=XLSX.utils.sheet_to_json(sheet,{defval:""});
+      columnas=inventario.length?Object.keys(inventario[0]):[];
+      if(!inventario.length) throw new Error("No se encontraron registros.");
+
+      const eqCol=buscarColumna(["equipo"]);
+      const tipos=eqCol ? new Set(inventario.map(r=>norm(r[eqCol])).filter(Boolean)).size : 0;
+
+      document.getElementById("statEquipos").textContent=inventario.length;
+      document.getElementById("statTipos").textContent=tipos;
+      document.getElementById("statColumnas").textContent=columnas.length;
+
+      estado.className="status ok";
+      estado.innerHTML="✅ Inventario cargado: <b>"+inventario.length+"</b> registros.";
+      agregarMensaje("✅ <b>Inventario conectado.</b> Encontré "+inventario.length+" registros y "+columnas.length+" columnas.","bot");
+    }catch(err){
+      estado.className="status err";
+      estado.textContent="❌ "+err.message;
+    }
+  };
+  reader.readAsArrayBuffer(f);
+}
+
+// ============================================================
+// FUNCIONES DE CONSULTA
+// ============================================================
+function getRowsByStatus(statusText, mode){
+  const col = buscarColumna(mode==="mtto" ? ["estado","mtto"] : ["estado","cal"]);
+  if(!col) return [];
+  return inventario.filter(r=>norm(r[col])===norm(statusText));
+}
+
+function getNextDateRows(mode, maxDays){
+  const col = mode==="mtto"
+    ? buscarColumna(["proximo","mtto"])
+    : buscarColumna(["fecha","proximo","aseguramiento"]);
+  if(!col) return [];
+  return inventario.filter(r=>{
+    const d=diasDesdeHoy(r[col]);
+    return d!==null && d>=0 && d<=maxDays;
+  });
+}
+
+function getExactDayRows(mode, offset){
+  const col = mode==="mtto"
+    ? buscarColumna(["proximo","mtto"])
+    : buscarColumna(["fecha","proximo","aseguramiento"]);
+  if(!col) return [];
+  return inventario.filter(r=>diasDesdeHoy(r[col])===offset);
+}
+
+function countUniqueEquipment(){
+  const col=buscarColumna(["equipo"]);
+  if(!col) return 0;
+  return new Set(inventario.map(r=>norm(r[col])).filter(Boolean)).size;
+}
+
+function searchField(term, fieldParts){
+  const col=buscarColumna(fieldParts);
+  if(!col) return [];
+  const t=norm(term);
+  return inventario.filter(r=>norm(r[col]).includes(t));
+}
+
+function searchByLocation(term){ return searchField(term,["ubicacion"]); }
+function searchByService(term){ return searchField(term,["unf"]); }
+function searchByBrand(term){ return searchField(term,["marca"]); }
+function searchByEquipment(term){ return searchField(term,["equipo"]); }
+function searchByPlate(term){ return searchField(term,["placa"]); }
+
+// ============================================================
+// CATÁLOGO DE FUNCIONES PARA GEMINI
+// Gemini solo decide QUÉ función usar y con qué parámetros.
+// Los resultados se calculan localmente sobre el Excel.
+// ============================================================
+const TOOLS = [
+  {name:"count_equipment",description:"Cuenta todos los registros de equipos del inventario.",params:{}},
+  {name:"count_equipment_types",description:"Cuenta tipos distintos en EQUIPO.",params:{}},
+  {name:"count_monitors",description:"Cuenta los equipos cuyo nombre contiene monitor.",params:{}},
+
+  {name:"maintenance_overdue",description:"Devuelve equipos con mantenimiento preventivo vencido.",params:{}},
+  {name:"maintenance_today",description:"Devuelve equipos cuyo próximo mantenimiento cae hoy.",params:{}},
+  {name:"maintenance_tomorrow",description:"Devuelve equipos cuyo próximo mantenimiento cae mañana.",params:{}},
+  {name:"maintenance_next_days",description:"Devuelve equipos cuyo próximo mantenimiento está entre hoy y N días.",params:{days:"number"}},
+  {name:"maintenance_overdue_count",description:"Cuenta mantenimientos vencidos.",params:{}},
+  {name:"maintenance_upcoming_count",description:"Cuenta mantenimientos próximos. Usa próximos 30 días si no se especifica otro periodo.",params:{days:"number"}},
+
+  {name:"calibration_overdue",description:"Devuelve equipos con calibración vencida.",params:{}},
+  {name:"calibration_this_week",description:"Devuelve equipos que deben calibrarse durante los próximos 7 días.",params:{}},
+  {name:"calibration_next_days",description:"Devuelve equipos cuya próxima calibración está entre hoy y N días.",params:{days:"number"}},
+
+  {name:"search_equipment",description:"Busca equipos por nombre o descripción de EQUIPO.",params:{term:"string"}},
+  {name:"search_location",description:"Busca equipos por ubicación.",params:{term:"string"}},
+  {name:"search_service",description:"Busca equipos por servicio o UNF.",params:{term:"string"}},
+  {name:"search_brand",description:"Busca equipos por marca.",params:{term:"string"}},
+  {name:"search_plate",description:"Busca un equipo por placa.",params:{term:"string"}}
+];
+
+function toolSchema(){
+  return {
+    type:"OBJECT",
+    properties:{
+      name:{type:"STRING",enum:TOOLS.map(t=>t.name)},
+      days:{type:"NUMBER"},
+      term:{type:"STRING"}
+    },
+    required:["name"]
+  };
+}
+
+// ============================================================
+// EJECUCIÓN DE FUNCIONES
+// ============================================================
+function ejecutarFuncion(call){
+  const name=call.name;
+  const args=call.args||{};
+  switch(name){
+    case "count_equipment": return {count:inventario.length};
+    case "count_equipment_types": return {count:countUniqueEquipment()};
+    case "count_monitors": {
+      const r=searchByEquipment("monitor");
+      return {count:r.length,rows:r};
+    }
+    case "maintenance_overdue": { const r=getRowsByStatus("VENCIDO","mtto"); return {count:r.length,rows:r}; }
+    case "maintenance_today": { const r=getExactDayRows("mtto",0); return {count:r.length,rows:r}; }
+    case "maintenance_tomorrow": { const r=getExactDayRows("mtto",1); return {count:r.length,rows:r}; }
+    
+    case "maintenance_overdue_count": {
+      const r=getRowsByStatus("VENCIDO","mtto");
+      return {count:r.length,rows:r};
+    }
+    case "maintenance_upcoming_count": {
+      const d=Math.max(1,Number(args.days)||30);
+      const r=getNextDateRows("mtto",d);
+      return {days:d,count:r.length,rows:r};
+    }case "maintenance_next_days": {let d=Math.max(0,Number(args.days)||7);let r=getNextDateRows("mtto",d);return {days:d,count:r.length,rows:r};}
+    
+    case "calibration_this_week": {
+      const r=getNextDateRows("cal",7);
+      return {days:7,count:r.length,rows:r};
+    }
+    case "calibration_overdue": { const r=getRowsByStatus("VENCIDO","cal"); return {count:r.length,rows:r}; }
+    case "calibration_today": { const r=getExactDayRows("cal",0); return {count:r.length,rows:r}; }
+    case "calibration_tomorrow": { const r=getExactDayRows("cal",1); return {count:r.length,rows:r}; }
+    case "calibration_next_days": {let d=Math.max(0,Number(args.days)||7);let r=getNextDateRows("cal",d);return {days:d,count:r.length,rows:r};}
+    case "search_equipment": { const r=searchByEquipment(args.term||""); return {term:args.term||"",count:r.length,rows:r}; }
+    case "search_location": { const r=searchByLocation(args.term||""); return {term:args.term||"",count:r.length,rows:r}; }
+    case "search_service": { const r=searchByService(args.term||""); return {term:args.term||"",count:r.length,rows:r}; }
+    case "search_brand": { const r=searchByBrand(args.term||""); return {term:args.term||"",count:r.length,rows:r}; }
+    case "search_plate": { const r=searchByPlate(args.term||""); return {term:args.term||"",count:r.length,rows:r}; }
+    default: throw new Error("Función no reconocida: "+name);
+  }
+}
+
+function rowsToCompact(rows){
+  const cEquipo=buscarColumna(["equipo"]);
+  const cUb=buscarColumna(["ubicacion"]);
+  const cPlaca=buscarColumna(["placa"]);
+  return rows.slice(0,80).map(r=>({
+    EQUIPO:r[cEquipo]??"",
+    UBICACION:r[cUb]??"",
+    PLACA:r[cPlaca]??""
+  }));
+}
+
+// ============================================================
+// GEMINI: ROUTING DE PREGUNTA
+// ============================================================
+async function geminiBackend(mode, payload){
+  const res=await fetch(GEMINI_BACKEND_URL,{
+    method:"POST",
+    headers:{"Content-Type":"application/json"},
+    body:JSON.stringify({mode, ...payload})
+  });
+
+  const data=await res.json().catch(()=>({}));
+  if(!res.ok || data.error){
+    throw new Error(data.error?.message || data.error || "Error en el backend de Gemini.");
+  }
+  return data;
+}
+
+async function interpretarPregunta(pregunta){
+  const instructions = `
+Eres un router de preguntas para un inventario biomédico.
+Debes elegir EXACTAMENTE una función del catálogo.
+
+Reglas:
+- "mantenimiento vencido" => maintenance_overdue
+- "mantenimientos vencidos" / cantidad vencidos => maintenance_overdue_count
+- "mantenimiento hoy" => maintenance_today
+- "mantenimiento mañana" => maintenance_tomorrow
+- "mantenimiento próximos 7 días" => maintenance_next_days con days=7
+- "mantenimiento próximos 30 días" => maintenance_next_days con days=30
+- "cuántos mantenimientos están próximos" => maintenance_upcoming_count con days=30
+- "calibración vencida" => calibration_overdue
+- "calibrar esta semana" => calibration_this_week
+- "calibración próximos 30 días" => calibration_next_days con days=30
+- cantidad total de equipos => count_equipment
+- tipos distintos => count_equipment_types
+- "monitores" => count_monitors
+- "marca" => search_brand
+- "servicio"/"UNF"/"área"/"servicio asistencial" => search_service
+- "ubicación"/"habitación"/"P4 308" => search_location
+- "placa" => search_plate
+- nombre/tipo de equipo => search_equipment
+
+No uses search_location para preguntas que digan servicio o UNF; esas preguntas deben usar search_service.
+
+Devuelve SOLO JSON con:
+{"name":"<funcion>","days":<numero opcional>,"term":"<texto opcional>"}
+
+Pregunta:
+${pregunta}
+`;
+
+  const data=await geminiBackend("route",{
+    question:pregunta,
+    instructions,
+    tools:TOOLS,
+    schema:toolSchema()
+  });
+
+  return data.call || data;
+}
+
+async function redactarRespuesta(pregunta, call, result){
+  const compact=result.rows ? rowsToCompact(result.rows) : result;
+  const prompt=`
+Eres el asistente de inventario biomédico de un hospital.
+Responde en español, claro y breve.
+No inventes datos y no cambies números.
+La consulta ya fue ejecutada sobre el inventario real.
+
+Pregunta del usuario:
+${pregunta}
+
+Función ejecutada:
+${JSON.stringify(call)}
+
+Resultado:
+${JSON.stringify(compact)}
+
+Cantidad total encontrada:
+${result.count ?? ""}
+
+Si hay registros:
+- indica primero la cantidad;
+- cuando la pregunta requiera una lista de equipos, muestra ÚNICAMENTE estas tres columnas: EQUIPO | UBICACIÓN | PLACA;
+- no muestres marca, modelo, serie, fechas ni otros campos en esas listas;
+- si hay más registros de los mostrados, indícalo.
+Si no hay registros, dilo claramente.
+`;
+
+  const data=await geminiBackend("answer",{
+    question:pregunta,
+    call,
+    result:compact,
+    prompt
+  });
+
+  return data.text || data.answer || "Sin respuesta.";
+}
+
+// ============================================================
+// PREGUNTAR
+// ============================================================
+async function preguntar(){
+  const input=document.getElementById("pregunta");
+  const pregunta=input.value.trim();
+  if(!pregunta)return;
+
+  if(!inventario.length){
+    agregarMensaje("⚠️ Primero carga el inventario.","bot");
+    return;
+  }
+  if(!GEMINI_BACKEND_URL || GEMINI_BACKEND_URL.includes("TU-BACKEND-AQUI")){
+    agregarMensaje("⚠️ Falta configurar la URL del backend seguro de Gemini.","bot");
+    return;
+  }
+
+  agregarMensaje("<b>Tú:</b> "+esc(pregunta),"user");
+  input.value="";
+  const box=agregarMensaje("<b>Asistente:</b> Interpretando la consulta...","bot");
+
+  try{
+    const call=await interpretarPregunta(pregunta);
+    box.innerHTML="<b>Asistente:</b> Consultando el inventario...";
+    const result=ejecutarFuncion(call);
+    // For list-producing queries, render the list ourselves so formatting is always
+    // clean and limited to Equipo | Ubicación | Placa.
+    const listFunctions = new Set([
+      "maintenance_overdue",
+      "maintenance_today",
+      "maintenance_tomorrow",
+      "maintenance_next_days",
+      "calibration_overdue",
+      "calibration_this_week",
+      "calibration_next_days",
+      "search_equipment",
+      "search_location",
+      "search_service",
+      "search_brand",
+      "search_plate"
+    ]);
+
+    if(listFunctions.has(call.name) && Array.isArray(result.rows)){
+      const label = {
+        maintenance_overdue: "equipos con mantenimiento vencido",
+        maintenance_today: "equipos con mantenimiento hoy",
+        maintenance_tomorrow: "equipos con mantenimiento mañana",
+        maintenance_next_days: "equipos con mantenimiento en los próximos " + (result.days || 7) + " días",
+        calibration_overdue: "equipos con calibración vencida",
+        calibration_this_week: "equipos que deben calibrarse esta semana",
+        calibration_next_days: "equipos que deben calibrarse en los próximos " + (result.days || 30) + " días",
+        search_equipment: "equipos encontrados",
+        search_location: "equipos encontrados en la ubicación indicada",
+        search_service: "equipos encontrados en el servicio indicado",
+        search_brand: "equipos encontrados de la marca indicada",
+        search_plate: "equipo encontrado para la placa indicada"
+      }[call.name] || "equipos encontrados";
+
+      box.innerHTML =
+        "<b>Asistente:</b><br>" +
+        "Se encontraron <b>" + result.count + "</b> " + label + ".<br><br>" +
+        renderInventoryTable(result.rows);
+    } else {
+      box.innerHTML="<b>Asistente:</b> Redactando la respuesta...";
+      const answer=await redactarRespuesta(pregunta,call,result);
+      box.innerHTML="<b>Asistente:</b><br><br>"+formatear(answer);
+    }
+  }catch(err){
+    box.innerHTML="<b>❌ Error:</b><br>"+esc(err.message);
+  }
+}
+
+// ============================================================
+// PREGUNTAS RÁPIDAS
+// ============================================================
+function preguntarRapido(texto){
+  document.getElementById("pregunta").value=texto;
+  preguntar();
+}
+</script>
+</body>
+</html>
