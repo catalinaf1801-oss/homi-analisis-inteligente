@@ -12,55 +12,9 @@
 }
 *{box-sizing:border-box}
 body{margin:0;font-family:"Segoe UI",Arial,sans-serif;background:var(--fondo);color:var(--texto)}
-header{
-  height:92px;
-  background:#172b73;
-  color:#fff;
-  display:flex;
-  align-items:stretch;
-  width:100%;
-  box-shadow:0 3px 12px rgba(0,0,0,.12);
-}
-.header-logo{
-  width:190px;
-  min-width:190px;
-  background:#06255b;
-  display:flex;
-  align-items:center;
-  justify-content:center;
-  overflow:hidden;
-}
-.header-logo img{
-  width:188px;
-  height:92px;
-  object-fit:cover;
-  object-position:center;
-}
-.header-title{
-  flex:1;
-  background:#24358f;
-  display:flex;
-  flex-direction:column;
-  justify-content:center;
-  padding:0 28px;
-}
-.header-title h1{
-  margin:0;
-  color:#fff;
-  font-size:23px;
-  line-height:1.15;
-  font-weight:800;
-  letter-spacing:.1px;
-}
-.header-title .sub{
-  margin-top:5px;
-  color:#fff;
-  font-size:13px;
-  font-weight:600;
-  font-style:italic;
-  opacity:1;
-}
-main{max-width:1180px;margin:22px auto;padding:0 18px}
+header{height:72px;background:var(--azul);color:#fff;display:flex;align-items:center;justify-content:space-between;padding:0 28px}
+.header-logo{width:190px;min-width:190px;background:#06255b;display:flex;align-items:center;justify-content:center;overflow:hidden}.header-logo img{width:188px;height:92px;object-fit:cover;object-position:center}.header-title{flex:1;background:#24358f;display:flex;flex-direction:column;justify-content:center;padding:0 28px}.header-title h1{margin:0;color:#fff;font-size:23px;line-height:1.15;font-weight:800;letter-spacing:.1px}.header-title .sub{margin-top:5px;color:#fff;font-size:13px;font-weight:600}
+main{max-width:1180px;margin:24px auto;padding:0 18px}
 .card{background:#fff;border-radius:18px;padding:22px;margin-bottom:18px;box-shadow:0 8px 28px rgba(0,0,0,.08)}
 h1,h2{color:var(--azul);margin-top:0}
 p{color:var(--gris)}
@@ -83,11 +37,10 @@ button.alt{background:#edf1ff;color:var(--azul);border:1px solid #d5dcf3}
 .grid{display:grid;grid-template-columns:repeat(3,1fr);gap:12px;margin-top:14px}
 .stat{background:#f7f8fb;border:1px solid #e7eaf0;border-radius:12px;padding:15px}
 .stat b{display:block;font-size:23px;color:var(--azul)}
-table{border-collapse:collapse;width:100%;margin-top:12px;font-size:13px;background:#fff}
-th,td{border:1px solid #e3e7ee;padding:9px 10px;text-align:left;vertical-align:top}
-th{background:#f3f5f8;color:#172b73;font-weight:700}
-tr:nth-child(even){background:#fafbfc}
-@media(max-width:800px){.grid{grid-template-columns:1fr}.entry{flex-direction:column}.header-title h1{font-size:17px}.header-logo{width:120px;min-width:120px}.header-logo img{width:120px;height:92px}.header-title{padding:0 14px}}
+table{border-collapse:collapse;width:100%;margin-top:10px;font-size:13px}
+th,td{border:1px solid #e3e7ee;padding:8px;text-align:left}
+th{background:#f3f5f8}
+@media(max-width:800px){.grid{grid-template-columns:1fr}.entry{flex-direction:column}.header{height:auto}}
 </style>
 </head>
 <body>
@@ -102,11 +55,11 @@ tr:nth-child(even){background:#fafbfc}
 </header>
 
 <main>
-<section class="card" style="border-top:4px solid #24358f;">
+<section class="card">
   <h1>🤖 Análisis Inteligente</h1>
   <p>
     El asistente usa Gemini para interpretar la pregunta y funciones de consulta para obtener
-    resultados directamente del inventario cargado. Las preguntas del sistema están organizadas por Mantenimiento, Calibración e Inventario. En las consultas que generan listas se muestran únicamente Equipo, Ubicación y Placa. La IA no inventa cantidades: los resultados se calculan sobre los datos.
+    resultados directamente del inventario cargado. La IA no inventa cantidades: los resultados se calculan sobre los datos.
   </p>
 
   <div class="row">
@@ -124,28 +77,16 @@ tr:nth-child(even){background:#fafbfc}
 </section>
 
 <section class="card">
-  <h2>Preguntas principales</h2>
-
-  <h3 style="color:#172b73;">🔧 Mantenimiento</h3>
+  <h2>Preguntas rápidas</h2>
   <div class="questions">
-    <button class="q" onclick="preguntarRapido('¿Qué equipos tienen mantenimiento vencido?')">¿Qué equipos tienen mantenimiento vencido?</button>
-    <button class="q" onclick="preguntarRapido('¿Qué equipos vencen hoy?')">¿Qué equipos vencen hoy?</button>
+    <button class="q" onclick="preguntarRapido('¿Qué equipos tienen mantenimiento vencido?')">🔴 Mantenimiento vencido</button>
+    <button class="q" onclick="preguntarRapido('¿Qué equipos vencen hoy?')">📅 Vencen hoy</button>
+    <button class="q" onclick="preguntarRapido('¿Qué equipos vencen mañana?')">📅 Vencen mañana</button>
+    <button class="q" onclick="preguntarRapido('¿Qué equipos vencen en los próximos 7 días?')">🟠 Próximos 7 días</button>
+    <button class="q" onclick="preguntarRapido('¿Qué equipos vencen en los próximos 30 días?')">🟡 Próximos 30 días</button>
+    <button class="q" onclick="preguntarRapido('¿Qué equipos tienen calibración vencida?')">🔴 Calibración vencida</button>
+    <button class="q" onclick="preguntarRapido('¿Cuántos tipos de equipos hay?')">📊 Tipos de equipos</button>
   </div>
-  <div class="small" style="margin-top:-4px;margin-bottom:16px;">Más preguntas de mantenimiento están disponibles escribiéndolas en el chat.</div>
-
-  <h3 style="color:#172b73;">🧪 Calibración</h3>
-  <div class="questions">
-    <button class="q" onclick="preguntarRapido('¿Qué equipos tienen calibración vencida?')">¿Qué equipos tienen calibración vencida?</button>
-    <button class="q" onclick="preguntarRapido('¿Qué equipos deben calibrarse esta semana?')">¿Qué equipos deben calibrarse esta semana?</button>
-  </div>
-  <div class="small" style="margin-top:-4px;margin-bottom:16px;">Más preguntas de calibración están disponibles escribiéndolas en el chat.</div>
-
-  <h3 style="color:#172b73;">📦 Inventario</h3>
-  <div class="questions">
-    <button class="q" onclick="preguntarRapido('¿Cuántos equipos hay?')">¿Cuántos equipos hay?</button>
-    <button class="q" onclick="preguntarRapido('¿Cuántos tipos de equipos hay?')">¿Cuántos tipos de equipos hay?</button>
-  </div>
-  <div class="small" style="margin-top:-4px;">La consulta ¿Cuántos monitores tenemos? también está programada y se puede escribir en el chat.</div>
 </section>
 
 <section class="card">
@@ -160,7 +101,7 @@ tr:nth-child(even){background:#fafbfc}
   </div>
 
   <p class="small">
-    La conexión con Gemini se realiza mediante un backend seguro. La API Key no está almacenada en esta página.
+    La API Key está configurada en el código para esta demo local. Antes de publicar la web, debe moverse a un backend seguro.
   </p>
 </section>
 </main>
@@ -171,7 +112,7 @@ tr:nth-child(even){background:#fafbfc}
 // ============================================================
 let inventario = [];
 let columnas = [];
-const GEMINI_BACKEND_URL = "https://TU-BACKEND-AQUI.example.com/gemini";
+const API_KEY = "AQ.Ab8RN6IzeUm0vFFwk5lO5V9cQpHOcyNsG3wNdOEbUDT-jyQMYQ";
 const GEMINI_MODEL = "gemini-3.6-flash";
 
 // ============================================================
@@ -258,30 +199,6 @@ function tablaHTML(rows, cols){
   return html;
 }
 
-function renderInventoryTable(rows){
-  if(!rows || !rows.length){
-    return "<p>No se encontraron registros.</p>";
-  }
-
-  const cEquipo = buscarColumna(["equipo"]);
-  const cUb = buscarColumna(["ubicacion"]);
-  const cPlaca = buscarColumna(["placa"]);
-
-  let out = '<div style="overflow:auto"><table>';
-  out += '<thead><tr><th>Equipo</th><th>Ubicación</th><th>Placa</th></tr></thead><tbody>';
-
-  rows.forEach(function(r){
-    out += '<tr>' +
-      '<td>' + esc(r[cEquipo] ?? "") + '</td>' +
-      '<td>' + esc(r[cUb] ?? "") + '</td>' +
-      '<td>' + esc(r[cPlaca] ?? "") + '</td>' +
-      '</tr>';
-  });
-
-  out += '</tbody></table></div>';
-  return out;
-}
-
 // ============================================================
 // CARGA EXCEL
 // ============================================================
@@ -293,6 +210,12 @@ function cargarInventario(){
     estado.textContent="Selecciona BD_EQUIPOS_HOMI.xlsx.";
     return;
   }
+  if(!API_KEY || API_KEY.includes("PEGA_TU_API_KEY")){
+    estado.className="status err";
+    estado.textContent="Falta colocar la Gemini API Key en el código."; 
+    return;
+  }
+
   const reader=new FileReader();
   reader.onload=e=>{
     try{
@@ -362,7 +285,6 @@ function searchField(term, fieldParts){
 }
 
 function searchByLocation(term){ return searchField(term,["ubicacion"]); }
-function searchByService(term){ return searchField(term,["unf"]); }
 function searchByBrand(term){ return searchField(term,["marca"]); }
 function searchByEquipment(term){ return searchField(term,["equipo"]); }
 function searchByPlate(term){ return searchField(term,["placa"]); }
@@ -374,23 +296,17 @@ function searchByPlate(term){ return searchField(term,["placa"]); }
 // ============================================================
 const TOOLS = [
   {name:"count_equipment",description:"Cuenta todos los registros de equipos del inventario.",params:{}},
-  {name:"count_equipment_types",description:"Cuenta tipos distintos en EQUIPO.",params:{}},
-  {name:"count_monitors",description:"Cuenta los equipos cuyo nombre contiene monitor.",params:{}},
-
+  {name:"count_equipment_types",description:"Cuenta tipos distintos en la columna EQUIPO.",params:{}},
   {name:"maintenance_overdue",description:"Devuelve equipos con mantenimiento preventivo vencido.",params:{}},
   {name:"maintenance_today",description:"Devuelve equipos cuyo próximo mantenimiento cae hoy.",params:{}},
   {name:"maintenance_tomorrow",description:"Devuelve equipos cuyo próximo mantenimiento cae mañana.",params:{}},
   {name:"maintenance_next_days",description:"Devuelve equipos cuyo próximo mantenimiento está entre hoy y N días.",params:{days:"number"}},
-  {name:"maintenance_overdue_count",description:"Cuenta mantenimientos vencidos.",params:{}},
-  {name:"maintenance_upcoming_count",description:"Cuenta mantenimientos próximos. Usa próximos 30 días si no se especifica otro periodo.",params:{days:"number"}},
-
   {name:"calibration_overdue",description:"Devuelve equipos con calibración vencida.",params:{}},
-  {name:"calibration_this_week",description:"Devuelve equipos que deben calibrarse durante los próximos 7 días.",params:{}},
+  {name:"calibration_today",description:"Devuelve equipos cuya próxima calibración cae hoy.",params:{}},
+  {name:"calibration_tomorrow",description:"Devuelve equipos cuya próxima calibración cae mañana.",params:{}},
   {name:"calibration_next_days",description:"Devuelve equipos cuya próxima calibración está entre hoy y N días.",params:{days:"number"}},
-
   {name:"search_equipment",description:"Busca equipos por nombre o descripción de EQUIPO.",params:{term:"string"}},
   {name:"search_location",description:"Busca equipos por ubicación.",params:{term:"string"}},
-  {name:"search_service",description:"Busca equipos por servicio o UNF.",params:{term:"string"}},
   {name:"search_brand",description:"Busca equipos por marca.",params:{term:"string"}},
   {name:"search_plate",description:"Busca un equipo por placa.",params:{term:"string"}}
 ];
@@ -416,35 +332,16 @@ function ejecutarFuncion(call){
   switch(name){
     case "count_equipment": return {count:inventario.length};
     case "count_equipment_types": return {count:countUniqueEquipment()};
-    case "count_monitors": {
-      const r=searchByEquipment("monitor");
-      return {count:r.length,rows:r};
-    }
     case "maintenance_overdue": { const r=getRowsByStatus("VENCIDO","mtto"); return {count:r.length,rows:r}; }
     case "maintenance_today": { const r=getExactDayRows("mtto",0); return {count:r.length,rows:r}; }
     case "maintenance_tomorrow": { const r=getExactDayRows("mtto",1); return {count:r.length,rows:r}; }
-    
-    case "maintenance_overdue_count": {
-      const r=getRowsByStatus("VENCIDO","mtto");
-      return {count:r.length,rows:r};
-    }
-    case "maintenance_upcoming_count": {
-      const d=Math.max(1,Number(args.days)||30);
-      const r=getNextDateRows("mtto",d);
-      return {days:d,count:r.length,rows:r};
-    }case "maintenance_next_days": {let d=Math.max(0,Number(args.days)||7);let r=getNextDateRows("mtto",d);return {days:d,count:r.length,rows:r};}
-    
-    case "calibration_this_week": {
-      const r=getNextDateRows("cal",7);
-      return {days:7,count:r.length,rows:r};
-    }
+    case "maintenance_next_days": {let d=Math.max(0,Number(args.days)||7);let r=getNextDateRows("mtto",d);return {days:d,count:r.length,rows:r};}
     case "calibration_overdue": { const r=getRowsByStatus("VENCIDO","cal"); return {count:r.length,rows:r}; }
     case "calibration_today": { const r=getExactDayRows("cal",0); return {count:r.length,rows:r}; }
     case "calibration_tomorrow": { const r=getExactDayRows("cal",1); return {count:r.length,rows:r}; }
     case "calibration_next_days": {let d=Math.max(0,Number(args.days)||7);let r=getNextDateRows("cal",d);return {days:d,count:r.length,rows:r};}
     case "search_equipment": { const r=searchByEquipment(args.term||""); return {term:args.term||"",count:r.length,rows:r}; }
     case "search_location": { const r=searchByLocation(args.term||""); return {term:args.term||"",count:r.length,rows:r}; }
-    case "search_service": { const r=searchByService(args.term||""); return {term:args.term||"",count:r.length,rows:r}; }
     case "search_brand": { const r=searchByBrand(args.term||""); return {term:args.term||"",count:r.length,rows:r}; }
     case "search_plate": { const r=searchByPlate(args.term||""); return {term:args.term||"",count:r.length,rows:r}; }
     default: throw new Error("Función no reconocida: "+name);
@@ -455,56 +352,47 @@ function rowsToCompact(rows){
   const cEquipo=buscarColumna(["equipo"]);
   const cUb=buscarColumna(["ubicacion"]);
   const cPlaca=buscarColumna(["placa"]);
+  const cMarca=buscarColumna(["marca"]);
+  const cModelo=buscarColumna(["modelo"]);
+  const cMtto=buscarColumna(["proximo","mtto"]);
+  const cCal=buscarColumna(["fecha","proximo","aseguramiento"]);
   return rows.slice(0,80).map(r=>({
     EQUIPO:r[cEquipo]??"",
     UBICACION:r[cUb]??"",
-    PLACA:r[cPlaca]??""
+    PLACA:r[cPlaca]??"",
+    MARCA:r[cMarca]??"",
+    MODELO:r[cModelo]??"",
+    PROXIMO_MTTO:cMtto?fmtFecha(r[cMtto]):"",
+    PROXIMA_CALIBRACION:cCal?fmtFecha(r[cCal]):""
   }));
 }
 
 // ============================================================
 // GEMINI: ROUTING DE PREGUNTA
 // ============================================================
-async function geminiBackend(mode, payload){
-  const res=await fetch(GEMINI_BACKEND_URL,{
-    method:"POST",
-    headers:{"Content-Type":"application/json"},
-    body:JSON.stringify({mode, ...payload})
-  });
-
-  const data=await res.json().catch(()=>({}));
-  if(!res.ok || data.error){
-    throw new Error(data.error?.message || data.error || "Error en el backend de Gemini.");
-  }
-  return data;
-}
-
 async function interpretarPregunta(pregunta){
+  const url="https://generativelanguage.googleapis.com/v1beta/models/"+GEMINI_MODEL+":generateContent";
   const instructions = `
 Eres un router de preguntas para un inventario biomédico.
 Debes elegir EXACTAMENTE una función del catálogo.
 
 Reglas:
-- "mantenimiento vencido" => maintenance_overdue
-- "mantenimientos vencidos" / cantidad vencidos => maintenance_overdue_count
-- "mantenimiento hoy" => maintenance_today
-- "mantenimiento mañana" => maintenance_tomorrow
-- "mantenimiento próximos 7 días" => maintenance_next_days con days=7
-- "mantenimiento próximos 30 días" => maintenance_next_days con days=30
-- "cuántos mantenimientos están próximos" => maintenance_upcoming_count con days=30
-- "calibración vencida" => calibration_overdue
-- "calibrar esta semana" => calibration_this_week
-- "calibración próximos 30 días" => calibration_next_days con days=30
+- "vencido" + mantenimiento => maintenance_overdue
+- "hoy" + mantenimiento => maintenance_today
+- "mañana" + mantenimiento => maintenance_tomorrow
+- "7 días"/"semana" + mantenimiento => maintenance_next_days con days=7
+- "30 días" + mantenimiento => maintenance_next_days con days=30
+- "vencido" + calibración => calibration_overdue
+- "hoy" + calibración => calibration_today
+- "mañana" + calibración => calibration_tomorrow
+- "7 días"/"semana" + calibración => calibration_next_days con days=7
+- "30 días" + calibración => calibration_next_days con days=30
 - cantidad total de equipos => count_equipment
 - tipos distintos => count_equipment_types
-- "monitores" => count_monitors
 - "marca" => search_brand
-- "servicio"/"UNF"/"área"/"servicio asistencial" => search_service
-- "ubicación"/"habitación"/"P4 308" => search_location
+- "ubicación"/"habitación" => search_location
 - "placa" => search_plate
 - nombre/tipo de equipo => search_equipment
-
-No uses search_location para preguntas que digan servicio o UNF; esas preguntas deben usar search_service.
 
 Devuelve SOLO JSON con:
 {"name":"<funcion>","days":<numero opcional>,"term":"<texto opcional>"}
@@ -513,18 +401,31 @@ Pregunta:
 ${pregunta}
 `;
 
-  const data=await geminiBackend("route",{
-    question:pregunta,
-    instructions,
-    tools:TOOLS,
-    schema:toolSchema()
+  const res=await fetch(url,{
+    method:"POST",
+    headers:{"Content-Type":"application/json","x-goog-api-key":API_KEY},
+    body:JSON.stringify({
+      contents:[{parts:[{text:instructions}]}],
+      generationConfig:{
+        responseMimeType:"application/json",
+        responseSchema:toolSchema()
+      }
+    })
   });
 
-  return data.call || data;
+  const data=await res.json();
+  if(!res.ok||data.error) throw new Error(data.error?.message||"Error al interpretar la pregunta.");
+  const text=data?.candidates?.[0]?.content?.parts?.map(p=>p.text||"").join("")||"";
+  return JSON.parse(text);
 }
 
+// ============================================================
+// GEMINI: REDACCIÓN FINAL
+// ============================================================
 async function redactarRespuesta(pregunta, call, result){
+  const url="https://generativelanguage.googleapis.com/v1beta/models/"+GEMINI_MODEL+":generateContent";
   const compact=result.rows ? rowsToCompact(result.rows) : result;
+
   const prompt=`
 Eres el asistente de inventario biomédico de un hospital.
 Responde en español, claro y breve.
@@ -545,20 +446,19 @@ ${result.count ?? ""}
 
 Si hay registros:
 - indica primero la cantidad;
-- cuando la pregunta requiera una lista de equipos, muestra ÚNICAMENTE estas tres columnas: EQUIPO | UBICACIÓN | PLACA;
-- no muestres marca, modelo, serie, fechas ni otros campos en esas listas;
+- presenta una tabla breve con Equipo, Ubicación, Placa y fecha relevante cuando exista;
 - si hay más registros de los mostrados, indícalo.
 Si no hay registros, dilo claramente.
 `;
 
-  const data=await geminiBackend("answer",{
-    question:pregunta,
-    call,
-    result:compact,
-    prompt
+  const res=await fetch(url,{
+    method:"POST",
+    headers:{"Content-Type":"application/json","x-goog-api-key":API_KEY},
+    body:JSON.stringify({contents:[{parts:[{text:prompt}]}]})
   });
-
-  return data.text || data.answer || "Sin respuesta.";
+  const data=await res.json();
+  if(!res.ok||data.error) throw new Error(data.error?.message||"Error redactando respuesta.");
+  return data?.candidates?.[0]?.content?.parts?.map(p=>p.text||"").join("")||"Sin respuesta.";
 }
 
 // ============================================================
@@ -573,8 +473,8 @@ async function preguntar(){
     agregarMensaje("⚠️ Primero carga el inventario.","bot");
     return;
   }
-  if(!GEMINI_BACKEND_URL || GEMINI_BACKEND_URL.includes("TU-BACKEND-AQUI")){
-    agregarMensaje("⚠️ Falta configurar la URL del backend seguro de Gemini.","bot");
+  if(!API_KEY){
+    agregarMensaje("⚠️ Falta la API Key.","bot");
     return;
   }
 
@@ -586,48 +486,9 @@ async function preguntar(){
     const call=await interpretarPregunta(pregunta);
     box.innerHTML="<b>Asistente:</b> Consultando el inventario...";
     const result=ejecutarFuncion(call);
-    // For list-producing queries, render the list ourselves so formatting is always
-    // clean and limited to Equipo | Ubicación | Placa.
-    const listFunctions = new Set([
-      "maintenance_overdue",
-      "maintenance_today",
-      "maintenance_tomorrow",
-      "maintenance_next_days",
-      "calibration_overdue",
-      "calibration_this_week",
-      "calibration_next_days",
-      "search_equipment",
-      "search_location",
-      "search_service",
-      "search_brand",
-      "search_plate"
-    ]);
-
-    if(listFunctions.has(call.name) && Array.isArray(result.rows)){
-      const label = {
-        maintenance_overdue: "equipos con mantenimiento vencido",
-        maintenance_today: "equipos con mantenimiento hoy",
-        maintenance_tomorrow: "equipos con mantenimiento mañana",
-        maintenance_next_days: "equipos con mantenimiento en los próximos " + (result.days || 7) + " días",
-        calibration_overdue: "equipos con calibración vencida",
-        calibration_this_week: "equipos que deben calibrarse esta semana",
-        calibration_next_days: "equipos que deben calibrarse en los próximos " + (result.days || 30) + " días",
-        search_equipment: "equipos encontrados",
-        search_location: "equipos encontrados en la ubicación indicada",
-        search_service: "equipos encontrados en el servicio indicado",
-        search_brand: "equipos encontrados de la marca indicada",
-        search_plate: "equipo encontrado para la placa indicada"
-      }[call.name] || "equipos encontrados";
-
-      box.innerHTML =
-        "<b>Asistente:</b><br>" +
-        "Se encontraron <b>" + result.count + "</b> " + label + ".<br><br>" +
-        renderInventoryTable(result.rows);
-    } else {
-      box.innerHTML="<b>Asistente:</b> Redactando la respuesta...";
-      const answer=await redactarRespuesta(pregunta,call,result);
-      box.innerHTML="<b>Asistente:</b><br><br>"+formatear(answer);
-    }
+    box.innerHTML="<b>Asistente:</b> Redactando la respuesta...";
+    const answer=await redactarRespuesta(pregunta,call,result);
+    box.innerHTML="<b>Asistente:</b><br><br>"+formatear(answer);
   }catch(err){
     box.innerHTML="<b>❌ Error:</b><br>"+esc(err.message);
   }
